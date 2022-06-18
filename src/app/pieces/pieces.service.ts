@@ -31,4 +31,8 @@ export class PiecesService {
   getStockByPlace(lugarId:number, page: number, size:number): Observable<Stock[]>{
     return this.httpClient.get<Stock[]>(this.apiUrl+'/lugar', {headers: this.headers, params: {lugarId: lugarId, page: page, size: size}}, )
   }
+
+  transferStock(stockId:number, cantidad:number, lugarId:number, estadoOrigen:string, estadoDestino:string): Observable<Stock>{
+    return this.httpClient.post<Stock>(this.apiUrl+'/transferencia', {}, {headers: this.headers, params: {stockId:stockId, cantidad:cantidad, lugarId:lugarId, estadoOrigen:estadoOrigen, estadoDestino:estadoDestino}}, )
+  }
 }

@@ -9,19 +9,28 @@ import { PiecesComponent } from './pieces/pieces.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule  } from '@angular/material/select';
 import { MatFormFieldModule  } from '@angular/material/form-field';
+import { MatInputModule  } from '@angular/material/input';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MovimientosComponent } from './movimientos/movimientos.component';
 import { PiecesService } from './pieces/pieces.service';
 import { HttpClientModule } from '@angular/common/http';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { TransferStockDialog } from './dialogs/transfer-stock-dialog/transfer-stock-dialog';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MovimientosService } from './movimientos/movimientos.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     PiecesComponent,
-    MovimientosComponent
+    MovimientosComponent,
+    TransferStockDialog
   ],
   imports: [
     BrowserModule,
@@ -33,9 +42,15 @@ import { HttpClientModule } from '@angular/common/http';
     MatPaginatorModule, 
     MatMenuModule,
     MatIconModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDialogModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule 
   ],
-  providers: [PiecesService],
+  providers: [PiecesService, MovimientosService, MatDatepickerModule ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

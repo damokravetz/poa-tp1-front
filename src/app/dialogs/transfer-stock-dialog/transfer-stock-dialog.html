@@ -1,0 +1,44 @@
+<h1 mat-dialog-title>Transferencia</h1>
+<div mat-dialog-content>
+
+  <form class="example-container" [formGroup]="options">
+
+    <mat-form-field appearance="fill">
+      <mat-label>Destino</mat-label>
+      <mat-select [(value)]="res.lugarId">
+        <mat-option *ngFor="let place of places" [value]="place.id">
+          {{place.descripcion}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Cantidad</mat-label>
+      <input matInput type="number" placeholder="Ex. 10" (change)="cantidadChanges()" [formControl]="cantidadControl" min="1">
+      <mat-error *ngIf="cantidadControl.invalid">Minimo 1</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Estado origen</mat-label>
+      <mat-select [(value)]="res.estadoOrigen">
+        <mat-option *ngFor="let estado of estadosOrigen" [value]="estado">
+          {{estado}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Estado Destino</mat-label>
+      <mat-select [(value)]="res.estadoDestino">
+        <mat-option *ngFor="let estado of estados" [value]="estado">
+          {{estado}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="false">Cancelar</button>
+  <button mat-button [mat-dialog-close]="this.res" cdkFocusInitial>Transferir</button>
+</div>

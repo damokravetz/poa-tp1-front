@@ -1,4 +1,5 @@
 import { Parte } from "./parte";
+import { Place } from "./place";
 
 export interface Stock {
     id:number,
@@ -6,5 +7,6 @@ export interface Stock {
     cantidadDesuso: number,
     cantidadUso: number,
     cantidadDesechado: number,
-    estado: string
+    estado: string,
+    lugar: Place
 }

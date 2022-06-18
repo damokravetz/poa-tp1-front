@@ -1,0 +1,17 @@
+table {
+    width: 100%;
+  }
+
+  .table-container {
+    width: 90%;
+    margin-top: 5%;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+
+  .date-container {
+    width: 100%;
+    text-align: center;
+    padding-top: 10%;
+    
+  }
