@@ -20,9 +20,11 @@ import { PiecesService } from './pieces/pieces.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TransferStockDialog } from './dialogs/transfer-stock-dialog/transfer-stock-dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MovimientosService } from './movimientos/movimientos.service';
+import { EnterWithdrawStockDialog } from './dialogs/transfer-stock-dialog/enter-withdraw-stock-dialog/enter-withdraw-stock-dialog';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { MovimientosService } from './movimientos/movimientos.service';
     LoginComponent,
     PiecesComponent,
     MovimientosComponent,
-    TransferStockDialog
+    TransferStockDialog,
+    EnterWithdrawStockDialog
   ],
   imports: [
     BrowserModule,
@@ -48,7 +51,8 @@ import { MovimientosService } from './movimientos/movimientos.service';
     ReactiveFormsModule,
     MatInputModule,
     MatDatepickerModule,
-    MatNativeDateModule 
+    MatNativeDateModule, 
+    MatSlideToggleModule
   ],
   providers: [PiecesService, MovimientosService, MatDatepickerModule ],
   bootstrap: [AppComponent]

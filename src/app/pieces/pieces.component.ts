@@ -9,6 +9,8 @@ import { PiecesService } from './pieces.service';
 import { Place } from '../models/place';
 import { MatDialog } from '@angular/material/dialog';
 import { TransferStockDialog } from '../dialogs/transfer-stock-dialog/transfer-stock-dialog';
+import { EnterWithdrawStockDialog } from '../dialogs/transfer-stock-dialog/enter-withdraw-stock-dialog/enter-withdraw-stock-dialog';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-pieces',
@@ -16,7 +18,9 @@ import { TransferStockDialog } from '../dialogs/transfer-stock-dialog/transfer-s
   styleUrls: ['./pieces.component.css']
 })
 export class PiecesComponent implements OnInit {
-
+  page: number=0;
+  size: number=10;
+  totalPageElements: number=0;
   parameterSubs: Subscription=new Subscription();
   stocks: Stock[];
   places: Place[];
@@ -43,12 +47,14 @@ export class PiecesComponent implements OnInit {
 
   getStocks(){
     if(this.selected==-1){
-      this.service.getStockGlobal(0,10).subscribe(data=>{
-        this.stocks=data;
+      this.service.getStockGlobal(this.page,this.size).subscribe(data=>{
+        this.stocks=data.content;
+        this.setPageData(data);
       })
     }else{
-      this.service.getStockByPlace(this.selected,0,10).subscribe(data=>{
-        this.stocks=data;
+      this.service.getStockByPlace(this.selected,this.page,this.size).subscribe(data=>{
+        this.stocks=data.content;
+        this.setPageData(data);
       })
     }
   }
@@ -62,10 +68,34 @@ export class PiecesComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if(result!=false){
         this.service.transferStock(result.stockId, result.cantidad, result.lugarId, result.estadoOrigen, result.estadoDestino).subscribe(data=>{
-            console.log(data)
             this.stocks[result.index].cantidadDesuso=data.cantidadDesuso;
             this.stocks[result.index].cantidadUso=data.cantidadUso;
             this.stocks[result.index].cantidadDesechado=data.cantidadDesechado;
+
+            alert("Transferencia realizado con éxito")
+        });
+      }
+    });
+  }
+
+  openEnterWithdrawDialog(stock: Stock, index: number){
+    const dialogRef = this.dialog.open(EnterWithdrawStockDialog, {
+      width: '250px',
+      data: {lugarId: this.selected, stock: stock, index: index},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result!=false){
+        this.service.enterStock(result.parteId, result.lugarId, result.cantidad, result.estadoDestino).subscribe(data=>{
+            if(this.stocks[result.index].id==null){
+              this.stocks[result.index].id=data.id;
+              this.stocks[result.index].lugar=data.lugar;
+            }
+            this.stocks[result.index].cantidadDesuso=data.cantidadDesuso;
+            this.stocks[result.index].cantidadUso=data.cantidadUso;
+            this.stocks[result.index].cantidadDesechado=data.cantidadDesechado;
+
+            alert("Ingreso realizado con éxito")
         });
       }
     });
@@ -73,6 +103,16 @@ export class PiecesComponent implements OnInit {
 
   openReport(parte: Parte){
     this.router.navigate(['movimientos'], { queryParams: { parteId: parte.id, lugarId: this.selected } })
+  }
+
+  setPageData(data: any){
+    this.page=data.number;
+    this.totalPageElements=data.totalElements;
+  }
+
+  eventPage(pageEvent: PageEvent){
+    this.page=pageEvent.pageIndex;
+    this.getStocks();
   }
 
 }
