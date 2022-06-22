@@ -147,7 +147,7 @@ export class PiecesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result!=false){
-        this.service.enterStock(result.parteId, result.lugarId, result.cantidad, result.estadoDestino).subscribe({
+        this.service.transferStock(result.stockId, result.cantidad, result.lugarId, result.estadoOrigen, result.estadoDestino).subscribe({
           next: (data) => {
             if(this.stocks[result.index].id==null){
               this.stocks[result.index].id=data.id;

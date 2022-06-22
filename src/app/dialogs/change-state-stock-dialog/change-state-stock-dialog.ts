@@ -25,7 +25,7 @@ import { Stock } from 'src/app/models/stock';
       });
       this.lugar=data.lugar;
       this.res={
-        lugar: this.lugar.id, 
+        lugarId: this.lugar.id, 
         estadoOrigen: this.estados[0],
         estadoDestino: this.estados[0],
         cantidad: this.cantidadControl.value,
