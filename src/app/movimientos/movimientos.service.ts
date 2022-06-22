@@ -20,7 +20,7 @@ export class MovimientosService {
   }
 
   getTransfersGlobal(desde: string, hasta: string, page: number, size:number): Observable<any>{
-    return this.httpClient.get<any>( this.apiUrl, {headers: this.headers, params: {desde: desde, hasta: hasta, page: page, size: size}} )
+    return this.httpClient.get<any>( this.apiUrl+'/global', {headers: this.headers, params: {desde: desde, hasta: hasta, page: page, size: size}} )
   }
 
   getTransfersByPart(desde: string, hasta: string, parteId: number, page: number, size:number): Observable<any>{

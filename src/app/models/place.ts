@@ -1,5 +1,6 @@
 export interface Place {
     id:number,
     codLugar: string,
-    descripcion: string
+    descripcion: string,
+    esDeposito: boolean
 }

@@ -6,26 +6,30 @@ import { Estado } from 'src/app/models/estado';
 import { Stock } from 'src/app/models/stock';
 
 @Component({
-    selector: 'enter-withdraw-stock-dialog',
-    templateUrl: 'enter-withdraw-stock-dialog.html',
+    selector: 'change-state-stock-dialog',
+    templateUrl: 'change-state-stock-dialog.html',
   })
-  export class EnterWithdrawStockDialog {
+  export class ChangeStateStockDialog {
     cantidadControl = new FormControl(0, Validators.min(1));
     options: FormGroup;
-    estados: Estado[]= [Estado.DESUSO, Estado.USO];
     res;
+    estados: Estado[]= [Estado.DESUSO, Estado.USO, Estado.DESECHADO];
+    estadosOrigen: Estado[]= [Estado.DESUSO, Estado.USO];
+    lugar: Place;
      
 
-    constructor(public dialogRef: MatDialogRef<EnterWithdrawStockDialog>,
-      @Inject(MAT_DIALOG_DATA) public data: {lugarId: number, stock: Stock, index: number},) {
+    constructor(public dialogRef: MatDialogRef<ChangeStateStockDialog>,
+      @Inject(MAT_DIALOG_DATA) public data: {lugar: Place, stock: Stock, index: number},) {
       this.options=new FormGroup({
         cantidadControl: this.cantidadControl
       });
+      this.lugar=data.lugar;
       this.res={
-        parteId: data.stock.parte.id,
-        lugarId: data.lugarId, 
+        lugar: this.lugar.id, 
+        estadoOrigen: this.estados[0],
         estadoDestino: this.estados[0],
         cantidad: this.cantidadControl.value,
+        stockId: data.stock.id,
         index: data.index
       };
       

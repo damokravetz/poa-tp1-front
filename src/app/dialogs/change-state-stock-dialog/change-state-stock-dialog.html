@@ -1,16 +1,7 @@
-<h1 mat-dialog-title>Transferencia</h1>
+<h1 mat-dialog-title>Cambio estado</h1>
 <div mat-dialog-content>
 
   <form class="example-container" [formGroup]="options">
-
-    <mat-form-field appearance="fill">
-      <mat-label>Destino</mat-label>
-      <mat-select [(value)]="res.lugar">
-        <mat-option *ngFor="let place of places" [value]="place">
-          {{place.descripcion}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Cantidad</mat-label>
@@ -18,7 +9,7 @@
       <mat-error *ngIf="cantidadControl.invalid">Minimo 1</mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" *ngIf="place.esDeposito==false">
+    <mat-form-field appearance="fill">
       <mat-label>Estado origen</mat-label>
       <mat-select [(value)]="res.estadoOrigen">
         <mat-option *ngFor="let estado of estadosOrigen" [value]="estado">
@@ -27,7 +18,7 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" *ngIf="res.lugar.esDeposito==false">
+    <mat-form-field appearance="fill">
       <mat-label>Estado Destino</mat-label>
       <mat-select [(value)]="res.estadoDestino">
         <mat-option *ngFor="let estado of estados" [value]="estado">

@@ -9,8 +9,9 @@ import { PiecesService } from './pieces.service';
 import { Place } from '../models/place';
 import { MatDialog } from '@angular/material/dialog';
 import { TransferStockDialog } from '../dialogs/transfer-stock-dialog/transfer-stock-dialog';
-import { EnterWithdrawStockDialog } from '../dialogs/transfer-stock-dialog/enter-withdraw-stock-dialog/enter-withdraw-stock-dialog';
+import { EnterWithdrawStockDialog } from '../dialogs/enter-withdraw-stock-dialog/enter-withdraw-stock-dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { ChangeStateStockDialog } from '../dialogs/change-state-stock-dialog/change-state-stock-dialog';
 
 @Component({
   selector: 'app-pieces',
@@ -29,13 +30,15 @@ export class PiecesComponent implements OnInit {
   error = '';
 
   displayedColumns: string[] = ['index', 'modelo', 'descripcion', 'tipo', 'desuso', 'uso', 'desechado', 'acciones'];
-  selected = -1;
+  globalPlace: Place = {id:-1 , codLugar:"00", descripcion:"Global", esDeposito:false}
+  selected: Place;
   constructor(
     private service: PiecesService,
     public dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router,
   ) {
+    this.selected=this.globalPlace;
     this.userName=localStorage.getItem('nombre')||'';
     this.userMail=localStorage.getItem('email')||'';
     this.stocks=[];
@@ -50,13 +53,13 @@ export class PiecesComponent implements OnInit {
   }
 
   getStocks(){
-    if(this.selected==-1){
+    if(this.selected.id==-1){
       this.service.getStockGlobal(this.page,this.size).subscribe(data=>{
         this.stocks=data.content;
         this.setPageData(data);
       })
     }else{
-      this.service.getStockByPlace(this.selected,this.page,this.size).subscribe(data=>{
+      this.service.getStockByPlace(this.selected.id,this.page,this.size).subscribe(data=>{
         this.stocks=data.content;
         this.setPageData(data);
       })
@@ -66,12 +69,12 @@ export class PiecesComponent implements OnInit {
   openTransferDialog(stock: Stock, index: number){
     const dialogRef = this.dialog.open(TransferStockDialog, {
       width: '250px',
-      data: {places: this.places, stock: stock, index: index},
+      data: {place: this.selected, places: this.places, stock: stock, index: index},
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if(result!=false){
-        this.service.transferStock(result.stockId, result.cantidad, result.lugarId, result.estadoOrigen, result.estadoDestino).subscribe(data=>{
+        this.service.transferStock(result.stockId, result.cantidad, result.lugar.id, result.estadoOrigen, result.estadoDestino).subscribe(data=>{
             this.stocks[result.index].cantidadDesuso=data.cantidadDesuso;
             this.stocks[result.index].cantidadUso=data.cantidadUso;
             this.stocks[result.index].cantidadDesechado=data.cantidadDesechado;
@@ -85,7 +88,7 @@ export class PiecesComponent implements OnInit {
   openEnterWithdrawDialog(stock: Stock, index: number){
     const dialogRef = this.dialog.open(EnterWithdrawStockDialog, {
       width: '250px',
-      data: {lugarId: this.selected, stock: stock, index: index},
+      data: {lugarId: this.selected.id, stock: stock, index: index},
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -105,8 +108,35 @@ export class PiecesComponent implements OnInit {
     });
   }
 
+  openChangeStateStockDialog(stock: Stock, index: number){
+    const dialogRef = this.dialog.open(ChangeStateStockDialog, {
+      width: '250px',
+      data: {lugar: this.selected, stock: stock, index: index},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result!=false){
+        this.service.enterStock(result.parteId, result.lugarId, result.cantidad, result.estadoDestino).subscribe(data=>{
+            if(this.stocks[result.index].id==null){
+              this.stocks[result.index].id=data.id;
+              this.stocks[result.index].lugar=data.lugar;
+            }
+            this.stocks[result.index].cantidadDesuso=data.cantidadDesuso;
+            this.stocks[result.index].cantidadUso=data.cantidadUso;
+            this.stocks[result.index].cantidadDesechado=data.cantidadDesechado;
+
+            alert("Cambio de estado realizado con éxito")
+        });
+      }
+    });
+  }
+
   openReport(parte: Parte){
-    this.router.navigate(['movimientos'], { queryParams: { parteId: parte.id, lugarId: this.selected } })
+    this.router.navigate(['movimientos'], { queryParams: { parteId: parte.id, lugarId: this.selected.id } })
+  }
+
+  openGlobalReport(){
+    this.router.navigate(['movimientos'], { queryParams: { parteId: -1, lugarId: this.selected.id } })
   }
 
   setPageData(data: any){

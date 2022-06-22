@@ -21,10 +21,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { TransferStockDialog } from './dialogs/transfer-stock-dialog/transfer-stock-dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MovimientosService } from './movimientos/movimientos.service';
-import { EnterWithdrawStockDialog } from './dialogs/transfer-stock-dialog/enter-withdraw-stock-dialog/enter-withdraw-stock-dialog';
+import { EnterWithdrawStockDialog } from './dialogs/enter-withdraw-stock-dialog/enter-withdraw-stock-dialog';
+import { TransferStockDialog } from './dialogs/transfer-stock-dialog/transfer-stock-dialog';
+import { ChangeStateStockDialog } from './dialogs/change-state-stock-dialog/change-state-stock-dialog';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { EnterWithdrawStockDialog } from './dialogs/transfer-stock-dialog/enter-
     PiecesComponent,
     MovimientosComponent,
     TransferStockDialog,
-    EnterWithdrawStockDialog
+    EnterWithdrawStockDialog,
+    ChangeStateStockDialog
   ],
   imports: [
     BrowserModule,
