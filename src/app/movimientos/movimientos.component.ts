@@ -30,6 +30,7 @@ export class MovimientosComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private service: MovimientosService) {
       this.userName=localStorage.getItem('nombre')||'';
       this.userMail=localStorage.getItem('email')||'';
@@ -50,8 +51,6 @@ export class MovimientosComponent implements OnInit {
   }
 
   getMovimientos(){
-    // let desdeParam= moment(this.desde).format('YYYY-MM-DD');
-    // let hastaParam= moment(this.hasta).format('YYYY-MM-DD');
     let desdeParam= moment(this.desde).format('DD-MM-YYYY HH:mm:ss');
     let hastaParam= moment(this.hasta).format('DD-MM-YYYY HH:mm:ss');
     if(this.parteId==-1&&this.lugarId==-1) this.getMovimientosGlobal(desdeParam, hastaParam);
@@ -61,30 +60,58 @@ export class MovimientosComponent implements OnInit {
   }
 
   getMovimientosGlobal(desdeParam: string, hastaParam:string){
-    this.service.getTransfersGlobal(desdeParam, hastaParam, this.page, this.size).subscribe(data=>{
-      this.movimientos=data.content;
-      this.setPageData(data);
+    this.service.getTransfersGlobal(desdeParam, hastaParam, this.page, this.size).subscribe({
+      next: (data) => {
+        this.movimientos=data.content;
+        this.setPageData(data);
+      },
+      error: (error) => {
+        this.onErrorAction(error)
+      }
     });
   }
 
+  onErrorAction(error:any){
+    if(error.status==403){
+      this.router.navigate(['login'])
+    }else{
+      alert("Hubo un error: " +error.status);
+    }
+  }
+
   getMovimientosPorParte(desdeParam: string, hastaParam:string){
-    this.service.getTransfersByPart(desdeParam, hastaParam, this.parteId, this.page, this.size).subscribe(data=>{
-      this.movimientos=data.content;
-      this.setPageData(data);
+    this.service.getTransfersByPart(desdeParam, hastaParam, this.parteId, this.page, this.size).subscribe({
+      next: (data) => {
+        this.movimientos=data.content;
+        this.setPageData(data);
+      },
+      error: (error) => {
+        this.onErrorAction(error)
+      }
     });
   }
 
   getMovimientosPorLugar(desdeParam: string, hastaParam:string){
-    this.service.getTransfersByPlace(desdeParam, hastaParam, this.lugarId, this.page, this.size).subscribe(data=>{
-      this.movimientos=data.content;
-      this.setPageData(data);
+    this.service.getTransfersByPlace(desdeParam, hastaParam, this.lugarId, this.page, this.size).subscribe({
+      next: (data) => {
+        this.movimientos=data.content;
+        this.setPageData(data);
+      },
+      error: (error) => {
+        this.onErrorAction(error)
+      }
     });
   }
 
   getMovimientosPorParteYLugar(desdeParam: string, hastaParam:string){
-    this.service.getTransfersByPartAndPlace(desdeParam, hastaParam, this.parteId, this.lugarId, this.page, this.size).subscribe(data=>{
-      this.movimientos=data.content;
-      this.setPageData(data);
+    this.service.getTransfersByPartAndPlace(desdeParam, hastaParam, this.parteId, this.lugarId, this.page, this.size).subscribe({
+      next: (data) => {
+        this.movimientos=data.content;
+        this.setPageData(data);
+      },
+      error: (error) => {
+        this.onErrorAction(error)
+      }
     });
   }
 

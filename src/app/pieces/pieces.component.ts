@@ -30,7 +30,7 @@ export class PiecesComponent implements OnInit {
   error = '';
 
   displayedColumns: string[] = ['index', 'modelo', 'descripcion', 'tipo', 'desuso', 'uso', 'desechado', 'acciones'];
-  globalPlace: Place = {id:-1 , codLugar:"00", descripcion:"Global", esDeposito:false}
+  globalPlace: Place = {id:-1 , codLugar:"00", descripcion:"Global", esDeposito:false, capacidad:0}
   selected: Place;
   constructor(
     private service: PiecesService,
@@ -46,23 +46,46 @@ export class PiecesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.service.getPlaces().subscribe(data=>{
-      this.places=data;
+    this.service.getPlaces().subscribe({
+      next: (data) => {
+        this.places=data;
+      },
+      error: (error) => {
+        this.onErrorAction(error)
+      }
     })
     this.getStocks();
   }
 
   getStocks(){
     if(this.selected.id==-1){
-      this.service.getStockGlobal(this.page,this.size).subscribe(data=>{
-        this.stocks=data.content;
-        this.setPageData(data);
+      this.service.getStockGlobal(this.page,this.size).subscribe({
+        next: (data) => {
+          this.stocks=data.content;
+          this.setPageData(data);
+        },
+        error: (error) => {
+          this.onErrorAction(error)
+        }
       })
     }else{
-      this.service.getStockByPlace(this.selected.id,this.page,this.size).subscribe(data=>{
-        this.stocks=data.content;
-        this.setPageData(data);
+      this.service.getStockByPlace(this.selected.id,this.page,this.size).subscribe({
+        next: (data) => {
+          this.stocks=data.content;
+          this.setPageData(data);
+        },
+        error: (error) => {
+          this.onErrorAction(error)
+        }
       })
+    }
+  }
+
+  onErrorAction(error:any){
+    if(error.status==403){
+      this.router.navigate(['login'])
+    }else{
+      alert("Hubo un error: "+error.status);
     }
   }
 
@@ -74,12 +97,16 @@ export class PiecesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result!=false){
-        this.service.transferStock(result.stockId, result.cantidad, result.lugar.id, result.estadoOrigen, result.estadoDestino).subscribe(data=>{
-            this.stocks[result.index].cantidadDesuso=data.cantidadDesuso;
-            this.stocks[result.index].cantidadUso=data.cantidadUso;
-            this.stocks[result.index].cantidadDesechado=data.cantidadDesechado;
-
-            alert("Transferencia realizado con éxito")
+        this.service.transferStock(result.stockId, result.cantidad, result.lugar.id, result.estadoOrigen, result.estadoDestino).subscribe({
+            next: (data) => {
+              this.stocks[result.index].cantidadDesuso=data.cantidadDesuso;
+              this.stocks[result.index].cantidadUso=data.cantidadUso;
+              this.stocks[result.index].cantidadDesechado=data.cantidadDesechado;
+              alert("Transferencia realizado con éxito")
+            },
+            error: (error) => {
+              this.onErrorAction(error)
+            }
         });
       }
     });
@@ -93,7 +120,8 @@ export class PiecesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result!=false){
-        this.service.enterStock(result.parteId, result.lugarId, result.cantidad, result.estadoDestino).subscribe(data=>{
+        this.service.enterStock(result.parteId, result.lugarId, result.cantidad, result.estadoDestino).subscribe({
+          next: (data) => {
             if(this.stocks[result.index].id==null){
               this.stocks[result.index].id=data.id;
               this.stocks[result.index].lugar=data.lugar;
@@ -101,8 +129,11 @@ export class PiecesComponent implements OnInit {
             this.stocks[result.index].cantidadDesuso=data.cantidadDesuso;
             this.stocks[result.index].cantidadUso=data.cantidadUso;
             this.stocks[result.index].cantidadDesechado=data.cantidadDesechado;
-
             alert("Ingreso realizado con éxito")
+          },
+          error: (error) => {
+            this.onErrorAction(error)
+          }
         });
       }
     });
@@ -116,7 +147,8 @@ export class PiecesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result!=false){
-        this.service.enterStock(result.parteId, result.lugarId, result.cantidad, result.estadoDestino).subscribe(data=>{
+        this.service.enterStock(result.parteId, result.lugarId, result.cantidad, result.estadoDestino).subscribe({
+          next: (data) => {
             if(this.stocks[result.index].id==null){
               this.stocks[result.index].id=data.id;
               this.stocks[result.index].lugar=data.lugar;
@@ -124,8 +156,11 @@ export class PiecesComponent implements OnInit {
             this.stocks[result.index].cantidadDesuso=data.cantidadDesuso;
             this.stocks[result.index].cantidadUso=data.cantidadUso;
             this.stocks[result.index].cantidadDesechado=data.cantidadDesechado;
-
             alert("Cambio de estado realizado con éxito")
+          },
+          error: (error) => {
+            this.onErrorAction(error)
+          }
         });
       }
     });

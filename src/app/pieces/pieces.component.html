@@ -10,6 +10,11 @@
 </mat-form-field>
 </div>
 
+
+<div class="button-container">
+  <p *ngIf="selected.esDeposito">Capacidad: {{selected.capacidad}}</p>
+</div>
+
 <div class="button-container">
     <button mat-raised-button (click)="openGlobalReport()">Reporte completo</button>
 </div>

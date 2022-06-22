@@ -10,7 +10,7 @@ import { Stock } from 'src/app/models/stock';
     templateUrl: 'enter-withdraw-stock-dialog.html',
   })
   export class EnterWithdrawStockDialog {
-    cantidadControl = new FormControl(0, Validators.min(1));
+    cantidadControl = new FormControl(0, [Validators.min(1), Validators.required]);
     options: FormGroup;
     res;
      

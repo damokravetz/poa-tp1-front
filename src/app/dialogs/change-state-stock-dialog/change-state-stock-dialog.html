@@ -31,5 +31,5 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button [mat-dialog-close]="false">Cancelar</button>
-  <button mat-button [mat-dialog-close]="this.res" cdkFocusInitial>Transferir</button>
+  <button mat-button [mat-dialog-close]="this.res" [disabled]="options.invalid" cdkFocusInitial>Transferir</button>
 </div>

@@ -36,11 +36,21 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(){
-    this.authenticate(this.emailControl.value, this.passControl.value).subscribe(data=>{
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('email', data.email);
-      localStorage.setItem('nombre', data.nombre);
-      this.router.navigate(['pieces'])
+    this.authenticate(this.emailControl.value, this.passControl.value).subscribe({
+      next: (data) => {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('email', data.email);
+        localStorage.setItem('nombre', data.nombre);
+        this.router.navigate(['pieces'])
+      },
+      error: (error) => {
+        console.log(error)
+        if(error.status==401){
+          alert("Usuario o password invalido");
+        }else{
+          alert("Ups... Ha habido un error");
+        }
+      }
     });
   }
 

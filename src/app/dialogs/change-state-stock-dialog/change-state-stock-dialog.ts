@@ -10,7 +10,7 @@ import { Stock } from 'src/app/models/stock';
     templateUrl: 'change-state-stock-dialog.html',
   })
   export class ChangeStateStockDialog {
-    cantidadControl = new FormControl(0, Validators.min(1));
+    cantidadControl = new FormControl(0, [Validators.min(1), Validators.required]);
     options: FormGroup;
     res;
     estados: Estado[]= [Estado.DESUSO, Estado.USO, Estado.DESECHADO];
@@ -32,7 +32,6 @@ import { Stock } from 'src/app/models/stock';
         stockId: data.stock.id,
         index: data.index
       };
-      
     }
 
     cantidadChanges(){

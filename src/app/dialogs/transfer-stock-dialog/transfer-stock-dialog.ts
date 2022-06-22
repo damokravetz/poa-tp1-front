@@ -12,7 +12,7 @@ import { Stock } from 'src/app/models/stock';
   export class TransferStockDialog {
     places: Place[];
     place: Place;
-    cantidadControl = new FormControl(0, Validators.min(1));
+    cantidadControl = new FormControl(0, [Validators.min(1), Validators.required]);
     options: FormGroup;
     estados: Estado[]= [Estado.DESUSO, Estado.USO, Estado.DESECHADO];
     estadosOrigen: Estado[]= [Estado.DESUSO, Estado.USO];
