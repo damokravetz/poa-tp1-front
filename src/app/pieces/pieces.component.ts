@@ -18,6 +18,8 @@ import { PageEvent } from '@angular/material/paginator';
   styleUrls: ['./pieces.component.css']
 })
 export class PiecesComponent implements OnInit {
+  userName: string;
+  userMail: string;
   page: number=0;
   size: number=10;
   totalPageElements: number=0;
@@ -34,6 +36,8 @@ export class PiecesComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
   ) {
+    this.userName=localStorage.getItem('nombre')||'';
+    this.userMail=localStorage.getItem('email')||'';
     this.stocks=[];
     this.places=[];
   }

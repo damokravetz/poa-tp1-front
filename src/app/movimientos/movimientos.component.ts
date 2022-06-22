@@ -12,6 +12,8 @@ import { MovimientosService } from './movimientos.service';
   styleUrls: ['./movimientos.component.css']
 })
 export class MovimientosComponent implements OnInit {
+  userName: string;
+  userMail: string;
   useDate: boolean=false;
   desde: Date=new Date(+0);
   hasta: Date=new Date();
@@ -29,6 +31,8 @@ export class MovimientosComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private service: MovimientosService) {
+      this.userName=localStorage.getItem('nombre')||'';
+      this.userMail=localStorage.getItem('email')||'';
       this.options=new FormGroup({
         dateFromControl: this.dateFromControl,
         dateTillControl: this.dateTillControl

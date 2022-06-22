@@ -10,13 +10,15 @@ import { Place } from '../models/place';
   providedIn: 'root'
 })
 export class PiecesService {
+  private token: string;
   private apiUrl: string;
-  headers = new HttpHeaders(
-    {'Content-Type': 'application/json;charset=UTF-8'}
-  );
+  headers: HttpHeaders; 
 
   constructor(private httpClient: HttpClient) {
     this.apiUrl = environment.apiUrl + '/stock';
+    this.token=localStorage.getItem('token')||'';
+    this.headers= new HttpHeaders(
+      {'Content-Type': 'application/json;charset=UTF-8', 'Authorization': this.token});
    }
 
 

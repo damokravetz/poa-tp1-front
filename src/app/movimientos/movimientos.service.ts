@@ -8,13 +8,15 @@ import { Movimiento } from '../models/movimiento';
   providedIn: 'root'
 })
 export class MovimientosService {
+  private token:string;
   private apiUrl: string;
-  headers = new HttpHeaders(
-    {'Content-Type': 'application/json;charset=UTF-8'}
-  );
+  headers: HttpHeaders;
 
-  constructor(private httpClient: HttpClient) { 
+  constructor(private httpClient: HttpClient) {
     this.apiUrl = environment.apiUrl + '/movimiento';
+    this.token=localStorage.getItem('token')||''; 
+    this.headers= new HttpHeaders(
+      {'Content-Type': 'application/json;charset=UTF-8', 'Authorization': this.token});
   }
 
   getTransfersGlobal(desde: string, hasta: string, page: number, size:number): Observable<any>{
