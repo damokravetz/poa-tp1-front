@@ -25,8 +25,8 @@ export class MovimientosComponent implements OnInit {
   movimientos: Movimiento[]=[];
   displayedColumns: string[] = ['index', 'parte', 'origen', 'estado inicial', 'cantidad', 'destino', 'estado final'];
   options: FormGroup;
-  dateFromControl = new FormControl();
-  dateTillControl = new FormControl();
+  dateFromControl = new FormControl(this.desde, [Validators.required]);
+  dateTillControl = new FormControl(this.hasta, [Validators.required]);
 
   constructor(
     private route: ActivatedRoute,
@@ -60,6 +60,7 @@ export class MovimientosComponent implements OnInit {
   }
 
   getMovimientosGlobal(desdeParam: string, hastaParam:string){
+    console.log(desdeParam)
     this.service.getTransfersGlobal(desdeParam, hastaParam, this.page, this.size).subscribe({
       next: (data) => {
         this.movimientos=data.content;
@@ -126,11 +127,13 @@ export class MovimientosComponent implements OnInit {
   }
 
   dateChanges(event: any){
-    this.desde=this.dateFromControl.value;
-    this.hasta=this.dateTillControl.value;
-    this.page=0;
-    this.totalPageElements=0;
-    this.getMovimientos();
+    if(!this.options.invalid){
+      this.desde=this.dateFromControl.value;
+      this.hasta=this.dateTillControl.value;
+      this.page=0;
+      this.totalPageElements=0;
+      this.getMovimientos();
+    }
   }
 
   dateUsedChange(){
